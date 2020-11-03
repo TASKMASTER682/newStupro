@@ -8,8 +8,14 @@ const bodyParser=require('body-parser');
 //bring routes
 const auth=require('./routes/auth');
 const blogRoutes=require('./routes/blog');
+const jobRoutes=require('./routes/job');
 const tagRoutes=require('./routes/tag');
 const categoryRoutes=require('./routes/category');
+const jobTagRoutes=require('./routes/jobTag');
+const jobCategoryRoutes=require('./routes/jobCategory');
+const userRoutes = require('./routes/user');
+const formRoutes = require('./routes/form');
+
 
 const app=express();
 if (process.env.NODE_ENV === 'development') {
@@ -20,14 +26,21 @@ connectDB();
 
 app.use(express.json({extended:false}));
 app.use(morgan('dev'));
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit:"50mb"}));
 app.use(cookieParser());
+
 
 //routes
 app.use('/api',auth);
 app.use('/api',blogRoutes);
+app.use('/api',jobRoutes);
 app.use('/api',categoryRoutes);
 app.use('/api',tagRoutes);
+app.use('/api',jobCategoryRoutes);
+app.use('/api',jobTagRoutes);
+app.use('/api', userRoutes);
+app.use('/api', formRoutes);
+
 
 
 const port=process.env.PORT||8000;

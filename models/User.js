@@ -42,7 +42,7 @@ const userSchema=new mongoose.Schema({
     salt:String,
    
     about:{
-        type:Number,
+        type:String,
 
     },
     role:{
@@ -57,8 +57,21 @@ const userSchema=new mongoose.Schema({
      data:String,
      default:''
     },
-    
-},{timeStamp:true}
+
+    facebook:{
+        type:String,
+    },
+    linkedin:{
+        type:String
+    },
+    insta:{
+        type:String
+    },
+    twitter:{
+        type:String
+    }
+
+},{timestamps:true}
 );
 
 userSchema.virtual('password')

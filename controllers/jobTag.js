@@ -1,5 +1,5 @@
-const Tag = require('../models/Tag');
-const Blog = require('../models/Blog');
+const JobTag = require('../models/JobTag');
+const Job = require('../models/Job');
 const slugify = require('slugify');
 const { errorHandler } = require('../helpers/dbErrorHandler');
 
@@ -8,9 +8,9 @@ try {
     const { name } = req.body;
     let slug = slugify(name).toLowerCase();
 
-    let tag = new Tag({ name, slug });
+    let jobTag = new JobTag({ name, slug });
 
-    await tag.save((err, data) => {
+    await jobTag.save((err, data) => {
         if (err) {
             console.log(err);
             return res.status(400).json({
@@ -29,25 +29,25 @@ exports.read=async (req,res)=>{
     try {
         const slug = req.params.slug.toLowerCase();
 
-       await Tag.findOne({ slug }).exec((err, tag) => {
+       await JobTag.findOne({ slug }).exec((err, jobTag) => {
             if (err) {
                 return res.status(400).json({
                     error: 'Tag not found'
                 });
             }
             // res.json(tag);
-            Blog.find({ tags: tag })
-                .populate('categories', '_id name slug')
-                .populate('tags', '_id name slug')
-                .populate('postedBy', '_id name')
-                .select('_id title slug excerpt categories postedBy tags createdAt updatedAt')
+            Job.find({ jobTags: jobTag }).sort({updatedAt:-1})
+                .populate('jobCategories', '_id name slug')
+                .populate('jobTags', '_id name slug')
+                
+                .select('_id title slug excerpt applyLink salary lastDate location agency type qualification jobCategories  jobTags createdAt updatedAt')
                 .exec((err, data) => {
                     if (err) {
                         return res.status(400).json({
                             error: errorHandler(err)
                         });
                     }
-                    res.json({ tag: tag, blogs: data });
+                    res.json({ jobTag: jobTag, jobs: data });
                 });
         });
         
@@ -59,7 +59,7 @@ exports.read=async (req,res)=>{
 
 exports.list=async (req,res)=>{
     try {
-       await Tag.find({}).exec((err, data) => {
+       await JobTag.find({}).exec((err, data) => {
             if (err) {
                 return res.status(400).json({
                     error: errorHandler(err)
@@ -77,7 +77,7 @@ exports.remove=async (req,res)=>{
     try {
         const slug = req.params.slug.toLowerCase();
 
-       await Tag.findOneAndRemove({ slug }).exec((err, data) => {
+       await JobTag.findOneAndRemove({ slug }).exec((err, data) => {
             if (err) {
                 return res.status(400).json({
                     error: errorHandler(err)

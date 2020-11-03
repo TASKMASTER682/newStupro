@@ -1,5 +1,5 @@
-const Category = require('../models/Category');
-const Blog=require('../models/Blog')
+const JobCategory = require('../models/JobCategory');
+const Job=require('../models/Job')
 const slugify = require('slugify');
 const { errorHandler } = require('../helpers/dbErrorHandler');
 
@@ -8,9 +8,9 @@ exports.create=async (req,res)=>{
         const { name } = req.body;
         let slug = slugify(name).toLowerCase();
     
-        let category =await new Category({ name, slug });
+        let jobCategory =await new JobCategory({ name, slug });
     
-        await category.save((err, data) => {
+       await jobCategory.save((err, data) => {
             if (err) {
                 return res.status(400).json({
                     error: errorHandler(err)
@@ -26,11 +26,14 @@ exports.create=async (req,res)=>{
 
 exports.list=async (req,res)=>{
  try {
-   await Category.find({}).exec((err, data) => {
+   await JobCategory.find({}).exec((err, data) => {
         if (err) {
+            console.log(err);
             return res.status(400).json({
                 error: errorHandler(err)
-            });
+            })
+        
+            ;
         }
         res.json(data);
     });
@@ -44,25 +47,25 @@ exports.read=async(req,res)=>{
     try {
         const slug = req.params.slug.toLowerCase();
 
-        await Category.findOne({ slug }).exec((err, category) => {
+       await JobCategory.findOne({ slug }).exec((err, jobCategory) => {
             if (err) {
                 return res.status(400).json({
                     error: errorHandler(err)
                 });
             }
             // res.json(category);
-            Blog.find({ categories: category })
-                .populate('categories', '_id name slug')
-                .populate('tags', '_id name slug')
-                .populate('postedBy', '_id name')
-                .select('_id title slug excerpt categories postedBy tags createdAt updatedAt')
+            Job.find({ jobCategories: jobCategory }).sort({updatedAt:-1})
+                .populate('jobCategories', '_id name slug')
+                .populate('jobTags', '_id name slug')
+                
+                .select('_id title slug excerpt salary applyLink qualification agency location lastDate type jobCategories jobTags createdAt updatedAt')
                 .exec((err, data) => {
                     if (err) {
                         return res.status(400).json({
                             error: errorHandler(err)
                         });
                     }
-                    res.json({ category: category, blogs: data });
+                    res.json({ jobCategory: jobCategory, jobs: data });
                 });
         });
     } catch (err) {
@@ -75,7 +78,7 @@ exports.remove=async (req,res)=>{
     try {
         const slug = req.params.slug.toLowerCase();
 
-        await Category.findOneAndRemove({ slug }).exec((err, data) => {
+        await JobCategory.findOneAndRemove({ slug }).exec((err, data) => {
             if (err) {
                 return res.status(400).json({
                     error: errorHandler(err)

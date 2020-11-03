@@ -1,5 +1,5 @@
 const mongoose=require('mongoose');
-const tagSchema=new mongoose.Schema({
+const jobTagSchema=new mongoose.Schema({
 
     name:{
         type:String,
@@ -19,4 +19,4 @@ const tagSchema=new mongoose.Schema({
 {timestamps:true}
 );
 
-module.exports=mongoose.model('Tag',tagSchema);
+module.exports=mongoose.model('JobTag',jobTagSchema);
