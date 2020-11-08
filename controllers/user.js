@@ -55,15 +55,33 @@ exports.update = (req, res) => {
                 error: 'Photo could not be uploaded'
             });
         }
+ 
         let user = req.profile;
-        user = _.extend(user, fields);
-
+        // user's existing role and email before update
+        let existingRole = user.role;
+        let existingEmail = user.email;
+ 
+        if (fields && fields.username && fields.username.length > 12) {
+            return res.status(400).json({
+                error: 'Username should be less than 12 characters long'
+            });
+        }
+ 
+        if (fields.username) {
+            fields.username = slugify(fields.username).toLowerCase();
+        }
+ 
         if (fields.password && fields.password.length < 6) {
             return res.status(400).json({
                 error: 'Password should be min 6 characters long'
             });
         }
-
+ 
+        user = _.extend(user, fields);
+        // user's existing role and email - dont update - keep it same
+        user.role = existingRole;
+        user.email = existingEmail;
+ 
         if (files.photo) {
             if (files.photo.size > 10000000) {
                 return res.status(400).json({
@@ -73,20 +91,23 @@ exports.update = (req, res) => {
             user.photo.data = fs.readFileSync(files.photo.path);
             user.photo.contentType = files.photo.type;
         }
-
+ 
         user.save((err, result) => {
             if (err) {
+                console.log('profile udpate error', err);
                 return res.status(400).json({
-                    error: 'All fields required'
+                    error: errorHandler(err)
                 });
             }
             user.hashed_password = undefined;
-            user.salt=undefined;
-            user.photo=undefined;
+            user.salt = undefined;
+            user.photo = undefined;
             res.json(user);
         });
     });
 };
+
+
 exports.getUsers=async (req,res)=>{
     try {
         const users=await User.find().populate('user',['name','photo']).sort({createdAt:-1});
