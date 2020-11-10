@@ -32,23 +32,23 @@ const jobSchema = new mongoose.Schema(
             type:{}
         },
         lastDate:{
-         type:String,
+         type:Date,
          required:true
         },
         location:{
-            type:String,
+            type:[String],
             required:true
         },
         salary:{
-            type:String,
+            type:[String],
             required:true
         },
         agency:{
-            type:String
+            type:[String]
             
         },
         qualification:{
-         type:String,
+         type:[String],
          required:true
         },
         type:{

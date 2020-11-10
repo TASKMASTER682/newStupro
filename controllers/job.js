@@ -315,6 +315,7 @@ exports.updateJob = async (req, res) => {
             }
 
           oldJob.save((err, result) => {
+              console.log(err);
                 if (err) {
                     return res.status(400).json({
                         error: errorHandler(err)

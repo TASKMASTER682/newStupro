@@ -46,7 +46,8 @@ exports.publicProfile = (req, res) => {
     });
 };
 
-exports.update = (req, res) => {
+exports.update =async (req, res) => {
+   try {
     let form = new formidable.IncomingForm();
     form.keepExtension = true;
     form.parse(req, (err, fields, files) => {
@@ -105,6 +106,10 @@ exports.update = (req, res) => {
             res.json(user);
         });
     });
+   } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error')
+   }
 };
 
 

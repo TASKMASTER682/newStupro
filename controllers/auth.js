@@ -258,7 +258,7 @@ exports.forgotPassword = async (req, res) => {
             <p>${process.env.CLIENT_URL}/auth/password/reset/${token}</p>
             <hr/>
             <p>This email may contain sensetive information</p>
-            <p>https://stupro.com</p>
+            <p>https://theprograd.com</p>
         `
         };
         // populating the db > user > resetPasswordLink
@@ -329,7 +329,7 @@ exports.googleLogin = (req, res) => {
             User.findOne({ email }).exec((err, user) => {
                 if (user) {
                     // console.log(user)
-                    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+                    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: '2d' });
                     res.cookie('token', token, { expiresIn: '1d' });
                     const { _id, email, name, role, username } = user;
                     return res.json({ token, user: { _id, email, name, role, username } });
