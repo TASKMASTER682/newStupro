@@ -17,7 +17,7 @@ try {
         <p>Sender message: ${message}</p>
         <hr />
         <p>This email may contain sensitive information</p>
-        <p>https://stupro.com</p>
+        <p>https://theprograd.com</p>
     `,
   };
 
@@ -48,7 +48,7 @@ exports.contactBlogAuthorForm =async (req, res) => {
         <p>Sender message: ${message}</p>
         <hr />
         <p>This email may contain sensitive information</p>
-        <p>https://stupro.com</p>
+        <p>https://theprograd.com</p>
     `,
   };
 
