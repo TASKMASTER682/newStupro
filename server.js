@@ -26,7 +26,7 @@ connectDB();
 
 app.use(express.json({extended:false}));
 app.use(morgan('dev'));
-app.use(bodyParser.json({limit:"50mb"}));
+app.use(bodyParser.json());
 app.use(cookieParser());
 
 
@@ -40,8 +40,6 @@ app.use('/api',jobCategoryRoutes);
 app.use('/api',jobTagRoutes);
 app.use('/api', userRoutes);
 app.use('/api', formRoutes);
-
-
 
 const port=process.env.PORT||8000;
 app.listen(port,()=>{console.log(`server is running on port ${port}`)});

@@ -1,5 +1,4 @@
 const Job = require('../models/Job');
-const User = require('../models/User');
 const JobCategory = require('../models/JobCategory');
 const JobTag = require('../models/JobTag');
 const formidable = require('formidable');
@@ -92,7 +91,6 @@ try {
         job.mtitle = `${title} | ${process.env.APP_NAME}`;
         job.mdesc = stripHtml(body.substring(0, 160)).result;
         
-        // categories and tags
         let arrayOfCategories = jobCategories && jobCategories.split(',');
         let arrayOfTags = jobTags && jobTags.split(',');
         
@@ -114,7 +112,6 @@ try {
                     error: errorHandler(err)
                 });
             }
-            // res.json(result);
             Job.findByIdAndUpdate(result._id, { $push: { jobCategories: arrayOfCategories } }, { new: true }).exec(
                 (err, result) => {
                     if (err) {
@@ -143,9 +140,6 @@ try {
     res.status(500).send('Server error');
 }
 };
-
-
-// list, listAllBlogsCategoriesTags, read, remove, update
 
 exports.list =async (req, res) => {
    try {
@@ -191,16 +185,14 @@ try {
                     error: errorHandler(err)
                 });
             }
-            jobs = data; // blogs
-            // get all categories
+            jobs = data;
             JobCategory.find({}).exec((err, c) => {
                 if (err) {
                     return res.json({
                         error: errorHandler(err)
                     });
                 }
-                jobCategories = c; // categories
-                // get all tags
+                jobCategories = c; 
                 JobTag.find({}).exec((err, t) => {
                     if (err) {
                         return res.json({
@@ -208,7 +200,6 @@ try {
                         });
                     }
                     jobTags = t;
-                    // return all blogs categories tags
                     res.json({ jobs, jobCategories, jobTags, size: jobs.length });
                 });
             });
@@ -321,7 +312,6 @@ exports.updateJob = async (req, res) => {
                         error: errorHandler(err)
                     });
                 }
-                // result.photo = undefined;
                 res.json(result);
             });
         });

@@ -3,7 +3,6 @@ const router=express.Router();
 
 const {signup,signin,signout,forgotPassword, resetPassword,preSignup, googleLogin}=require('../controllers/auth');
 
-//validators
 const {runValidation}=require('../validators');
 const {userSignupValidator,userSigninValidator, forgotPasswordValidator,resetPasswordValidator}=require('../validators/auth')
 

@@ -58,7 +58,6 @@ exports.update =async (req, res) => {
         }
  
         let user = req.profile;
-        // user's existing role and email before update
         let existingRole = user.role;
         let existingEmail = user.email;
  
@@ -79,7 +78,6 @@ exports.update =async (req, res) => {
         }
  
         user = _.extend(user, fields);
-        // user's existing role and email - dont update - keep it same
         user.role = existingRole;
         user.email = existingEmail;
  

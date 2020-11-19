@@ -43,39 +43,6 @@ exports.preSignup =async (req, res) => {
    
 };
 
-
-// exports.signup=async (req,res)=>{
-//     try {
-//         User.findOne({email:req.body.email}).exec((err,user)=>{
-//             if(user){
-//                 return res.status(400).json({
-//                     error:'Email is taken'
-//                 })
-//             }
-//             const {name,email,password}=req.body
-//             let username=shortId.generate()
-//             let profile=`${process.env.CLIENT_URL}/profile/${username}`
-     
-//             let newUser=new User({name,email,password,profile,username})
-//             newUser.save((err,success)=>{
-//              if(err){
-//                  return res.status(400).json({
-//                      error:err
-//                  })
-//              }
-//              res.json({
-//                  message:'signup success! please signin'
-                
-//              })
-//            })
-//        })
-        
-//     } catch (err) {
-//         console.error(err.message);
-//         res.status(500).send('Server error');
-//     }
- 
-// };
 exports.signup =async (req, res) => {
    try {
         const token = req.body.token;
@@ -119,20 +86,19 @@ exports.signin=async (req,res)=>{
     const {email,password}=req.body
   
 try {
-      //check if user exist
   User.findOne({email}).exec((err,user)=>{
     if(err|| !user){
         return res.status(400).json({
             error:'User with that email does not exist.Please signup'
         })
     }
-    //authenticate
+    
     if(!user.authenticate(password)){
       return res.status(400).json({
           error:'Email or password do not match'
       });
     }
-    //generate a token and send to client
+
     const token =jwt.sign({_id:user._id},process.env.JWT_SECRET,{expiresIn:'1d'});
 
     res.cookie('token',token,{expiresIn:'1d'})
@@ -261,7 +227,7 @@ exports.forgotPassword = async (req, res) => {
             <p>https://theprograd.com</p>
         `
         };
-        // populating the db > user > resetPasswordLink
+      
         return user.updateOne({ resetPasswordLink: token }, (err, success) => {
             if (err) {
                 return res.json({ error: errorHandler(err) });
@@ -323,12 +289,10 @@ const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 exports.googleLogin = (req, res) => {
     const idToken = req.body.tokenId;
     client.verifyIdToken({ idToken, audience: process.env.GOOGLE_CLIENT_ID }).then(response => {
-        // console.log(response)
         const { email_verified, name, email, jti } = response.payload;
         if (email_verified) {
             User.findOne({ email }).exec((err, user) => {
                 if (user) {
-                    // console.log(user)
                     const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: '2d' });
                     res.cookie('token', token, { expiresIn: '1d' });
                     const { _id, email, name, role, username } = user;

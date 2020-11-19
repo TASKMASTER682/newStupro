@@ -55,7 +55,7 @@ exports.create = async (req, res) => {
         blog.mtitle = `${title} | ${process.env.APP_NAME}`;
         blog.mdesc = stripHtml(body.substring(0, 160));
         blog.postedBy = req.user._id;
-        // categories and tags
+        
         let arrayOfCategories = categories && categories.split(',');
         let arrayOfTags = tags && tags.split(',');
 
@@ -75,7 +75,7 @@ exports.create = async (req, res) => {
                     error: errorHandler(err)
                 });
             }
-            // res.json(result);
+            
             Blog.findByIdAndUpdate(result._id, { $push: { categories: arrayOfCategories } }, { new: true }).exec(
                 (err, result) => {
                     if (err) {
@@ -104,9 +104,6 @@ exports.create = async (req, res) => {
          res.status(500).send('Server error');
    }
 };
-
-
-// list, listAllBlogsCategoriesTags, read, remove, update
 
 exports.list =async (req, res) => {
     try {
@@ -153,16 +150,15 @@ exports.listAllBlogsCategoriesTags = async (req, res) => {
                     error: errorHandler(err)
                 });
             }
-            blogs = data; // blogs
-            // get all categories
+            blogs = data; 
+            
             Category.find({}).exec((err, c) => {
                 if (err) {
                     return res.json({
                         error: errorHandler(err)
                     });
                 }
-                categories = c; // categories
-                // get all tags
+                categories = c; 
                 Tag.find({}).exec((err, t) => {
                     if (err) {
                         return res.json({
@@ -170,7 +166,6 @@ exports.listAllBlogsCategoriesTags = async (req, res) => {
                         });
                     }
                     tags = t;
-                    // return all blogs categories tags
                     res.json({ blogs, categories, tags, size: blogs.length });
                 });
             });
