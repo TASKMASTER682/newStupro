@@ -348,7 +348,7 @@ exports.listRelated = async (req, res) => {
     let limit = req.body.limit ? parseInt(req.body.limit) : 5;
     const { _id, jobCategories } = req.body.job;
 
-   await Job.find({ _id: { $ne: _id }, jobCategories: { $in: jobCategories } })
+   await Job.find({ _id: { $ne: _id }, jobCategories: { $in: jobCategories } }).sort({updatedAt:-1})
         .limit(limit)
         
         .select('title slug excerpt agency applyLink createdAt updatedAt')
