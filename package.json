@@ -4,9 +4,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "dev":"nodemon server",
+    "dev": "nodemon server",
     "start": "node server"
-   
   },
   "keywords": [],
   "author": "",
@@ -32,7 +31,6 @@
     "string-strip-html": "^6.0.0"
   },
   "devDependencies": {
-    
     "nodemon": "^2.0.4"
   }
 }

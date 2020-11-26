@@ -1,7 +1,5 @@
 const User = require('../models/User');
 const Blog = require('../models/Blog');
-const Job = require('../models/Job');
-
 const _ = require('lodash');
 const formidable = require('formidable');
 const fs = require('fs');
@@ -126,7 +124,7 @@ exports.update =async (req, res) => {
 
 exports.getUsers=async (req,res)=>{
     try {
-        const users=await User.find().populate('user',['name','photo']).sort({createdAt:-1});
+        const users=await User.find({}).populate('user',['name','photo']).sort({createdAt:-1});
         res.json(users);
     } catch (err) {
         console.error(err.message);
