@@ -326,7 +326,7 @@ exports.updateJob = async (req, res) => {
 exports.photo = async (req, res) => {
     try {
          const slug = req.params.slug.toLowerCase();
-   await Job.findOne({ slug })
+    Job.findOne({ slug })
         .select('photo')
         .exec((err, job) => {
             if (err || !job) {
@@ -348,7 +348,7 @@ exports.listRelated = async (req, res) => {
     let limit = req.body.limit ? parseInt(req.body.limit) : 5;
     const { _id, jobCategories } = req.body.job;
 
-   await Job.find({ _id: { $ne: _id }, jobCategories: { $in: jobCategories } }).sort({updatedAt:-1})
+    Job.find({ _id: { $ne: _id }, jobCategories: { $in: jobCategories } }).sort({updatedAt:-1})
         .limit(limit)
         
         .select('title slug excerpt agency applyLink createdAt updatedAt')
@@ -372,7 +372,7 @@ exports.listSearch =async (req, res) => {
     try {
          const { search } = req.query;
     if (search) {
-        Job.find(
+      await Job.find(
             {
                 $or: [{ title: { $regex: search, $options: 'i' } }, { body: { $regex: search, $options: 'i' } },{ location: { $regex: search, $options: 'i' } }]
             },

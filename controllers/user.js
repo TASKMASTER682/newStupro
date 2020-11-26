@@ -1,22 +1,31 @@
 const User = require('../models/User');
 const Blog = require('../models/Blog');
+const Job = require('../models/Job');
+
 const _ = require('lodash');
 const formidable = require('formidable');
 const fs = require('fs');
 const { errorHandler } = require('../helpers/dbErrorHandler');
 
-exports.read = (req, res) => {
-    req.profile.hashed_password = undefined;
+exports.read =async (req, res) => {
+    try {
+        req.profile.hashed_password = undefined;
     
-    return res.json(req.profile);
+        return res.json(req.profile);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error')
+    }
+  
 };
 
-exports.publicProfile = (req, res) => {
+exports.publicProfile =async (req, res) => {
+   try {
     let username = req.params.username;
     let user;
     let blogs;
 
-    User.findOne({ username }).exec((err, userFromDB) => {
+    User.findOne({ username }).select('-hashed_password').exec((err, userFromDB) => {
         if (err || !userFromDB) {
             return res.status(400).json({
                 error: 'User not found'
@@ -44,6 +53,10 @@ exports.publicProfile = (req, res) => {
                 });
             });
     });
+   } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error')
+   }
 };
 
 exports.update =async (req, res) => {
@@ -121,7 +134,8 @@ exports.getUsers=async (req,res)=>{
         
     }
     };
-exports.photo = (req, res) => {
+exports.photo =async (req, res) => {
+ try {
     const username = req.params.username;
     User.findOne({ username }).exec((err, user) => {
         if (err || !user) {
@@ -134,4 +148,8 @@ exports.photo = (req, res) => {
             return res.send(user.photo.data);
         }
     });
+ } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error')
+ }
 };

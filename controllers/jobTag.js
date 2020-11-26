@@ -59,7 +59,7 @@ exports.read=async (req,res)=>{
 
 exports.list=async (req,res)=>{
     try {
-       await JobTag.find({}).exec((err, data) => {
+        JobTag.find({}).exec((err, data) => {
             if (err) {
                 return res.status(400).json({
                     error: errorHandler(err)

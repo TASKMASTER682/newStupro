@@ -294,7 +294,7 @@ exports.update =async (req, res) => {
 exports.photo = async (req, res) => {
     try {
          const slug = req.params.slug.toLowerCase();
-   await Blog.findOne({ slug })
+    Blog.findOne({ slug })
         .select('photo')
         .exec((err, blog) => {
             if (err || !blog) {
@@ -316,7 +316,7 @@ exports.listRelated =async (req, res) => {
     let limit = req.body.limit ? parseInt(req.body.limit) : 3;
     const { _id, categories } = req.body.blog;
 
-   await Blog.find({ _id: { $ne: _id }, categories: { $in: categories } }).sort({updatedAt:-1})
+    Blog.find({ _id: { $ne: _id }, categories: { $in: categories } }).sort({updatedAt:-1})
         .limit(limit)
         .populate('postedBy', '_id name username profile photo')
         .select('title slug excerpt postedBy createdAt updatedAt')

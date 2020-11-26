@@ -26,7 +26,7 @@ exports.create=async (req,res)=>{
 
 exports.list=async (req,res)=>{
  try {
-   await JobCategory.find({}).exec((err, data) => {
+    JobCategory.find({}).exec((err, data) => {
         if (err) {
             console.log(err);
             return res.status(400).json({

@@ -41,8 +41,8 @@ const blogSchema = new mongoose.Schema(
         postedBy: {
             type: ObjectId,
             ref: 'User'
-        }
-     
+        },
+
     },
     { timestamps: true }
     

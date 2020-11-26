@@ -7,7 +7,6 @@ const {runValidation}=require('../validators');
 const {catagoryCreateValidator}=require('../validators/category');
 const {requireSignin,adminMiddleware}=require('../controllers/auth');
 
-
 router.post('/jobCategory',catagoryCreateValidator,runValidation,requireSignin,adminMiddleware,create);
 router.get('/jobCategories', list);
 router.get('/jobCategory/:slug', read);

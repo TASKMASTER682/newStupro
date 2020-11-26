@@ -1,10 +1,16 @@
 const mongoose=require('mongoose');
 const crypto=require('crypto');
+const { type } = require('os');
+const { ObjectId } = require('mongodb');
 
 
 
 
 const userSchema=new mongoose.Schema({
+    title:{
+        type:String,
+       
+    },
     username:{
         type:String,
         trim:true,
@@ -69,8 +75,9 @@ const userSchema=new mongoose.Schema({
     },
     twitter:{
         type:String
-    }
+    },
 
+ 
 },{timestamps:true}
 );
 

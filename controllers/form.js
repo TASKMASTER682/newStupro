@@ -32,7 +32,6 @@ try {
 
 exports.contactBlogAuthorForm =async (req, res) => {
   try {
-    console.log(req.body);
   const {authorEmail, name, email, message } = req.body;
   let mailList = [authorEmail, process.env.EMAIL_TO];
 

@@ -12,7 +12,7 @@ const _ =require('lodash');
 exports.preSignup =async (req, res) => {
     try {
          const { name, email, password } = req.body;
-    User.findOne({ email: email.toLowerCase() }, (err, user) => {
+   await User.findOne({ email: email.toLowerCase() }, (err, user) => {
         if (user) {
             return res.status(400).json({
                 error: 'Email is taken'
@@ -82,11 +82,11 @@ exports.signup =async (req, res) => {
    }
 };
 
-exports.signin=async (req,res)=>{
+exports.signin= async (req,res)=>{
     const {email,password}=req.body
   
 try {
-  User.findOne({email}).exec((err,user)=>{
+   User.findOne({email}).exec((err,user)=>{
     if(err|| !user){
         return res.status(400).json({
             error:'User with that email does not exist.Please signup'
@@ -99,9 +99,9 @@ try {
       });
     }
 
-    const token =jwt.sign({_id:user._id},process.env.JWT_SECRET,{expiresIn:'1d'});
+    const token =jwt.sign({_id:user._id},process.env.JWT_SECRET,{expiresIn:'5d'});
 
-    res.cookie('token',token,{expiresIn:'1d'})
+    res.cookie('token',token,{expiresIn:'5d'})
     const {_id,username,name,email,role}=user
     return res.json({
         token,
@@ -138,7 +138,7 @@ exports.requireSignin=expressJwt({
 exports.authMiddleware=async (req,res,next)=>{
 try {
     const authUserId=req.user._id;
-User.findById({_id:authUserId}).exec((err,user)=>{
+await User.findById({_id:authUserId}).exec((err,user)=>{
     if(err|| !user){
         return res.status(400).json({
             error:'User not found'
@@ -156,7 +156,7 @@ User.findById({_id:authUserId}).exec((err,user)=>{
 exports.adminMiddleware =async (req, res, next) => {
 try {
         const adminUserId = req.user._id;
-    User.findById({ _id: adminUserId }).exec((err, user) => {
+   await User.findById({ _id: adminUserId }).exec((err, user) => {
         if (err || !user) {
             return res.status(400).json({
                 error: 'User not found'
@@ -181,7 +181,7 @@ try {
 exports.canUpdateDeleteBlog = async (req, res, next) => {
 try {
         const slug = req.params.slug.toLowerCase();
-    Blog.findOne({ slug }).exec((err, data) => {
+   await Blog.findOne({ slug }).exec((err, data) => {
         if (err) {
             return res.status(400).json({
                 error: errorHandler(err)
@@ -286,15 +286,15 @@ exports.resetPassword =async (req, res) => {
 };
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-exports.googleLogin = (req, res) => {
+exports.googleLogin = async (req, res) => {
     const idToken = req.body.tokenId;
     client.verifyIdToken({ idToken, audience: process.env.GOOGLE_CLIENT_ID }).then(response => {
         const { email_verified, name, email, jti } = response.payload;
         if (email_verified) {
             User.findOne({ email }).exec((err, user) => {
                 if (user) {
-                    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: '2d' });
-                    res.cookie('token', token, { expiresIn: '1d' });
+                    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: '5d' });
+                    res.cookie('token', token, { expiresIn: '5d' });
                     const { _id, email, name, role, username } = user;
                     return res.json({ token, user: { _id, email, name, role, username } });
                 } else {
@@ -308,8 +308,8 @@ exports.googleLogin = (req, res) => {
                                 error: errorHandler(err)
                             });
                         }
-                        const token = jwt.sign({ _id: data._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
-                        res.cookie('token', token, { expiresIn: '1d' });
+                        const token = jwt.sign({ _id: data._id }, process.env.JWT_SECRET, { expiresIn: '5d' });
+                        res.cookie('token', token, { expiresIn: '5d' });
                         const { _id, email, name, role, username } = data;
                         return res.json({ token, user: { _id, email, name, role, username } });
                     });
