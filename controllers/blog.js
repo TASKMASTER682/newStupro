@@ -107,7 +107,7 @@ exports.create = async (req, res) => {
 
 exports.list =async (req, res) => {
     try {
-        await Blog.find({})
+        await Blog.find({}).sort({updatedAt:-1})
         .populate('categories', '_id name slug')
         .populate('tags', '_id name slug')
         .populate('postedBy', '_id name username facebook insta twitter linkedin')
@@ -136,7 +136,7 @@ exports.listAllBlogsCategoriesTags = async (req, res) => {
     let categories;
     let tags;
 
-    await Blog.find({})
+    await Blog.find({}).sort({updatedAt:-1})
         .populate('categories', '_id name slug')
         .populate('tags', '_id name slug')
         .populate('postedBy', '_id name username profile facebook insta twitter linkedin')
@@ -264,7 +264,7 @@ exports.update =async (req, res) => {
             if (files.photo) {
                 if (files.photo.size > 10000000) {
                     return res.status(400).json({
-                        error: 'Image should be less then 1mb in size'
+                        error: 'Image should be greater then 1mb in size'
                     });
                 }
                 oldBlog.photo.data = fs.readFileSync(files.photo.path);
@@ -370,7 +370,7 @@ exports.listByUser = async (req, res) => {
             });
         }
         let userId = user._id;
-        Blog.find({ postedBy: userId })
+        Blog.find({ postedBy: userId }).sort({updatedAt:-1})
             .populate('categories', '_id name slug')
             .populate('tags', '_id name slug')
             .populate('postedBy', '_id name username')
