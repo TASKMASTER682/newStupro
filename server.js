@@ -23,10 +23,9 @@ if (process.env.NODE_ENV === 'development') {
 } 
 connectDB();
 
-
-app.use(express.json({extended:false}));
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(express.json({limit: '50mb',extended:false}));
 app.use(morgan('dev'));
-app.use(bodyParser.json());
 app.use(cookieParser());
 
 
