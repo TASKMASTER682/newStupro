@@ -82,10 +82,10 @@ exports.signup =async (req, res) => {
    }
 };
 
-exports.signin= async (req,res)=>{
+exports.signin= (req,res)=>{
     const {email,password}=req.body
   
-try {
+
    User.findOne({email}).exec((err,user)=>{
     if(err|| !user){
         return res.status(400).json({
@@ -108,14 +108,8 @@ try {
         user:{_id,username,name,email,role}
     })
 });
-  
-    
-} catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server error');
-}
-    
-};
+} 
+
 
 exports.signout=async (req,res)=>{
     try {
