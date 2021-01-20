@@ -28,6 +28,7 @@ const privateJobSchema = new mongoose.Schema(
         mtitle: {
             type: String
         },
+      
         mdesc: {
             type:{}
         },

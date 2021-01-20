@@ -20,7 +20,7 @@ try {
             });
         }
 
-        const { title, body,agency, jobCategories,salary,qualification,lastDate,type,location, jobTags,applyLink } = fields;
+        const { title, body,agency, jobCategories,salary,affiliateLink,qualification,lastDate,type,location, jobTags,applyLink } = fields;
 
         if (!title || !title.length) {
             return res.status(400).json({
@@ -235,7 +235,7 @@ try {
         .populate('jobCategories', '_id name slug')
         .populate('jobTags', '_id name slug')
         
-        .select('_id title body slug mtitle mdesc applyLink jobCategories jobTags salary agency location qualification type lastDate createdAt updatedAt')
+        .select('_id title body slug mtitle mdesc affiliateLink jobCategories jobTags salary agency location qualification type lastDate createdAt updatedAt')
         .exec((err, data) => {
             if (err) {
                 return res.json({
@@ -295,7 +295,7 @@ exports.updateJob = async (req, res) => {
             oldJob = _.merge(oldJob, fields);
             oldJob.slug = slugBeforeMerge;
 
-            const { body, desc, jobCategories, jobTags,salary,agency ,applyLink,qualification,location,lastDate,type } = fields;
+            const { body, desc, jobCategories, jobTags,affiliateLink,salary,agency ,applyLink,qualification,location,lastDate,type } = fields;
 
             if (body) {
                 oldJob.excerpt = smartTrim(body, 320, ' ', ' ...');
