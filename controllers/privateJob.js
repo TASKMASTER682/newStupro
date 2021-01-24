@@ -296,7 +296,7 @@ exports.updatePvtJob = async (req, res) => {
             oldJob = _.merge(oldJob, fields);
             oldJob.slug = slugBeforeMerge;
 
-            const { body, desc, jobCategories, jobTags,salary,affiliateLink,agency,keySkills,position ,applyLink,qualification,location,lastDate,type } = fields;
+            const { body, desc, privateJobCategories, privateJobTags,salary,agency,keySkills,position ,applyLink,qualification,location,lastDate,type } = fields;
 
             if (body) {
                 oldJob.excerpt = smartTrim(body, 320, ' ', ' ...');
