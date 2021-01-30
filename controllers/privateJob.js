@@ -166,7 +166,7 @@ exports.listPvt =async (req, res) => {
 exports.listPvtHome =async (req, res) => {
     try {
         await PrivateJob.find({}).sort({updatedAt:-1}).limit(10)
-         .select('_id title slug excerpt createdAt updatedAt')
+         .select('_id title slug excerpt lastDate createdAt updatedAt')
          .exec((err, data) => {
              if (err) {
                  return res.json({
