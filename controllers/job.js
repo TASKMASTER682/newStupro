@@ -402,7 +402,7 @@ exports.listSearch =async (req, res) => {
                 }
                 res.json(jobs);
             }
-        ).select('-photo -body');
+        ).select('-photo -body').sort({updatedAt:-1});
     }
     } catch (err) {
        console.error(err.message);

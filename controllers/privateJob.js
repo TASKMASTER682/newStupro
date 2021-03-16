@@ -403,7 +403,7 @@ exports.listSearchPvt =async (req, res) => {
                 }
                 res.json(privateJobs);
             }
-        ).select('-photo -body');
+        ).select('-photo -body').sort({updatedAt:-1});
     }
     } catch (err) {
        console.error(err.message);
