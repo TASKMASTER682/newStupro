@@ -19,7 +19,6 @@ const jobCategoryRoutes=require('./routes/jobCategory');
 const userRoutes = require('./routes/user');
 const formRoutes = require('./routes/form');
 
-
 const app=express();
 if (process.env.NODE_ENV === 'development') {
     app.use(cors({ origin: `${process.env.CLIENT_URL}` }));
@@ -30,6 +29,7 @@ app.use(bodyParser.json({limit: '100mb'}));
 app.use(express.json({limit: '100mb',extended:false}));
 app.use(morgan('dev'));
 app.use(cookieParser());
+
 
 
 //routes
@@ -45,6 +45,5 @@ app.use('/api',privateJobCategoryRoutes);
 app.use('/api',privateJobTagRoutes);
 app.use('/api', userRoutes);
 app.use('/api', formRoutes);
-
 const port=process.env.PORT||8000;
 app.listen(port,()=>{console.log(`server is running on port ${port}`)});
