@@ -143,7 +143,7 @@ try {
 
 exports.list =async (req, res) => {
    try {
-       await Job.find({}).sort({updatedAt:-1})
+       const jobs=await Job.find({}).sort({updatedAt:-1})
         .populate('jobCategories', '_id name slug')
         .populate('jobTags', '_id name slug')
         .select('_id title slug excerpt jobCategories applyLink jobTags salary agency type lastDate qualification location  createdAt updatedAt')
@@ -243,7 +243,7 @@ try {
                 });
             }
             res.json(data);
-        });
+        })
 } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
@@ -350,7 +350,7 @@ exports.photo = async (req, res) => {
             if (err || !job) {
                 return res.status(400).json({
                     error: errorHandler(err)
-                });
+                }).cache({key:slug});
             }
             res.set('Content-Type', job.photo.contentType);
             return res.send(job.photo.data);
@@ -374,7 +374,7 @@ exports.listRelated = async (req, res) => {
             if (err) {
                 return res.status(400).json({
                     error: 'Jobs not found'
-                });
+                }).catch({key:req.body.job._id});
                
             }
             res.json(jobs);
