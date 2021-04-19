@@ -44,7 +44,7 @@ exports.read=async(req,res)=>{
     try {
         const slug = req.params.slug.toLowerCase();
 
-        await Category.findOne({ slug }).exec((err, category) => {
+         Category.findOne({ slug }).exec((err, category) => {
             if (err) {
                 return res.status(400).json({
                     error: errorHandler(err)

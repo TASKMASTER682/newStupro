@@ -1,10 +1,11 @@
 const express=require('express');
 const morgan=require('morgan');
+const compression = require("compression");
 const cors=require('cors');
 const cookieParser=require('cookie-parser');
 require('dotenv').config();
 const connectDB=require('./config/db')
-const bodyParser=require('body-parser');
+// const bodyParser=require('body-parser');
 //bring routes
 const auth=require('./routes/auth');
 const blogRoutes=require('./routes/blog');
@@ -24,11 +25,11 @@ if (process.env.NODE_ENV === 'development') {
     app.use(cors({ origin: `${process.env.CLIENT_URL}` }));
 } 
 connectDB();
-
-app.use(bodyParser.json({limit: '100mb'}));
+// app.use(bodyParser.json({limit: '100mb'}));
 app.use(express.json({limit: '100mb',extended:false}));
 app.use(morgan('dev'));
 app.use(cookieParser());
+app.use(compression());
 
 
 

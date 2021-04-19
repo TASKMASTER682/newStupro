@@ -29,7 +29,7 @@ exports.readPvt=async (req,res)=>{
     try {
         const slug = req.params.slug.toLowerCase();
 
-       await PrivateJobTag.findOne({ slug }).exec((err, privateJobTag) => {
+        PrivateJobTag.findOne({ slug }).exec((err, privateJobTag) => {
             if (err) {
                 return res.status(400).json({
                     error: 'Tag not found'

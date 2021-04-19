@@ -29,7 +29,7 @@ exports.read=async (req,res)=>{
     try {
         const slug = req.params.slug.toLowerCase();
 
-       await JobTag.findOne({ slug }).exec((err, jobTag) => {
+        JobTag.findOne({ slug }).exec((err, jobTag) => {
             if (err) {
                 return res.status(400).json({
                     error: 'Tag not found'

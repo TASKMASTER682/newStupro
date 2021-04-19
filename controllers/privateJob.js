@@ -145,7 +145,7 @@ try {
 
 exports.listPvt =async (req, res) => {
    try {
-       await PrivateJob.find({}).sort({updatedAt:-1})
+        PrivateJob.find({}).sort({updatedAt:-1})
         .populate('privateJobCategories', '_id name slug')
         .populate('privateJobTags', '_id name slug')
         .select('_id title slug excerpt privateJobCategories applyLink privateJobTags keySkills position salary agency type lastDate qualification location  createdAt updatedAt')
@@ -165,7 +165,7 @@ exports.listPvt =async (req, res) => {
 
 exports.listPvtHome =async (req, res) => {
     try {
-        await PrivateJob.find({}).sort({updatedAt:-1}).limit(10)
+         PrivateJob.find({}).sort({updatedAt:-1}).limit(10)
          .select('_id title slug excerpt lastDate createdAt updatedAt')
          .exec((err, data) => {
              if (err) {
@@ -190,7 +190,7 @@ try {
     let privateJobCategories;
     let privateJobTags;
 
-    await PrivateJob.find({}).sort({updatedAt:-1})
+     PrivateJob.find({}).sort({updatedAt:-1})
         .populate('privateJobCategories', '_id name slug')
         .populate('privateJobTags', '_id name slug')
         
@@ -232,7 +232,7 @@ try {
 exports.readPvt =async (req, res) => {
 try {
     const slug = req.params.slug.toLowerCase();
-    await PrivateJob.findOne({ slug })
+     PrivateJob.findOne({ slug })
         .populate('privateJobCategories', '_id name slug')
         .populate('privateJobTags', '_id name slug')
         
@@ -345,7 +345,7 @@ exports.updatePvtJob = async (req, res) => {
 exports.photo = async (req, res) => {
     try {
          const slug = req.params.slug.toLowerCase();
-    PrivateJob.findOne({ slug })
+        PrivateJob.findOne({ slug })
         .select('photo')
         .exec((err, privateJob) => {
             if (err || !privateJob) {

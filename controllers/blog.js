@@ -107,7 +107,7 @@ exports.create = async (req, res) => {
 
 exports.list =async (req, res) => {
     try {
-        await Blog.find({}).sort({updatedAt:-1})
+         Blog.find({}).sort({updatedAt:-1})
         .populate('categories', '_id name slug')
         .populate('tags', '_id name slug')
         .populate('postedBy', '_id name username facebook insta twitter linkedin')
@@ -136,7 +136,7 @@ exports.listAllBlogsCategoriesTags = async (req, res) => {
     let categories;
     let tags;
 
-    await Blog.find({}).sort({updatedAt:-1})
+     Blog.find({}).sort({updatedAt:-1}).lean()
         .populate('categories', '_id name slug')
         .populate('tags', '_id name slug')
         .populate('postedBy', '_id name username profile facebook insta twitter linkedin')
@@ -180,11 +180,11 @@ exports.listAllBlogsCategoriesTags = async (req, res) => {
 exports.read =async (req, res) => {
     try {
         const slug = req.params.slug.toLowerCase();
-       await Blog.findOne({ slug })
+        Blog.findOne({ slug }).lean()
         .populate('categories', '_id name slug')
         .populate('tags', '_id name slug')
         .populate('postedBy', '_id name username facebook insta twitter linkedin')
-        .select('_id title body slug mtitle mdesc categories tags postedBy createdAt updatedAt')
+        .select('_id title body slug mtitle mdesc categories tags postedBy createdAt updatedAt').lean()
         .exec((err, data) => {
             if (err) {
                 return res.json({
@@ -294,7 +294,7 @@ exports.update =async (req, res) => {
 exports.photo = async (req, res) => {
     try {
          const slug = req.params.slug.toLowerCase();
-    Blog.findOne({ slug })
+         Blog.findOne({ slug })
         .select('photo')
         .exec((err, blog) => {
             if (err || !blog) {

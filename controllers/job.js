@@ -143,7 +143,7 @@ try {
 
 exports.list =async (req, res) => {
    try {
-       const jobs=await Job.find({}).sort({updatedAt:-1})
+        Job.find({}).sort({updatedAt:-1})
         .populate('jobCategories', '_id name slug')
         .populate('jobTags', '_id name slug')
         .select('_id title slug excerpt jobCategories applyLink jobTags salary agency type lastDate qualification location  createdAt updatedAt')
@@ -163,7 +163,7 @@ exports.list =async (req, res) => {
 
 exports.listHome =async (req, res) => {
     try {
-        await Job.find({}).sort({updatedAt:-1}).limit(10)
+         Job.find({}).sort({updatedAt:-1}).limit(10)
          .select('_id title slug excerpt lastDate createdAt updatedAt')
          .exec((err, data) => {
              if (err) {
@@ -189,7 +189,7 @@ try {
     let jobCategories;
     let jobTags;
 
-    await Job.find({}).sort({updatedAt:-1})
+      Job.find({}).sort({updatedAt:-1})
         .populate('jobCategories', '_id name slug')
         .populate('jobTags', '_id name slug')
         
@@ -231,7 +231,7 @@ try {
 exports.read =async (req, res) => {
 try {
     const slug = req.params.slug.toLowerCase();
-    await Job.findOne({ slug })
+     Job.findOne({ slug })
         .populate('jobCategories', '_id name slug')
         .populate('jobTags', '_id name slug')
         

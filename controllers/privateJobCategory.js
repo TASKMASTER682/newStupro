@@ -47,7 +47,7 @@ exports.readPvt=async(req,res)=>{
     try {
         const slug = req.params.slug.toLowerCase();
 
-       await PrivateJobCategory.findOne({ slug }).exec((err, privateJobCategory) => {
+        PrivateJobCategory.findOne({ slug }).exec((err, privateJobCategory) => {
             if (err) {
                 return res.status(400).json({
                     error: errorHandler(err)
