@@ -10,7 +10,7 @@ const {requireSignin,adminMiddleware}=require('../controllers/auth');
 
 router.post('/category',catagoryCreateValidator,runValidation,requireSignin,adminMiddleware,create);
 router.get('/categories',routeCache(300), list);
-router.get('/category/:slug',routeCache(300), read);
+router.get('/categories/:slug',routeCache(300), read);
 router.delete('/category/:slug', requireSignin, adminMiddleware, remove);
 
 module.exports=router;

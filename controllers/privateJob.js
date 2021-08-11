@@ -20,7 +20,7 @@ try {
             });
         }
 
-        const { title, body,agency, privateJobCategories,salary,qualification,lastDate,type,location,keySkills,position, privateJobTags,applyLink } = fields;
+        const { title, body,subtitle,officialLink,language,agency,desc,postal,street,city,forSlug, privateJobCategories,salary,qualification,lastDate,type,location,keySkills,position, privateJobTags,applyLink } = fields;
 
         if (!title || !title.length) {
             return res.status(400).json({
@@ -79,6 +79,12 @@ try {
         let privateJob = new PrivateJob();
         privateJob.title = title;
         privateJob.body = body;
+        privateJob.desc=desc;
+        privateJob.postal=postal;
+        privateJob.officialLink=officialLink;
+        privateJob.city=city;
+        privateJob.language=language;
+        privateJob.street=street;
         privateJob.agency=agency;
         privateJob.salary = salary;
         privateJob.applyLink=applyLink;
@@ -88,10 +94,7 @@ try {
         privateJob.location = location;
         privateJob.qualification=qualification;
         privateJob.lastDate = lastDate;
-        privateJob.excerpt = smartTrim(body, 320, ' ', ' ...');
-        privateJob.slug = slugify(title).toLowerCase();
-        privateJob.mtitle = `${title} | ${process.env.APP_NAME}`;
-        privateJob.mdesc = stripHtml(body.substring(0, 160)).result;
+        privateJob.slug = slugify(forSlug).toLowerCase();
         
         let arrayOfCategories = privateJobCategories && privateJobCategories.split(',');
         let arrayOfTags = privateJobTags && privateJobTags.split(',');
@@ -148,7 +151,7 @@ exports.listPvt =async (req, res) => {
         PrivateJob.find({}).sort({updatedAt:-1})
         .populate('privateJobCategories', '_id name slug')
         .populate('privateJobTags', '_id name slug')
-        .select('_id title slug excerpt privateJobCategories applyLink privateJobTags keySkills position salary agency type lastDate qualification location  createdAt updatedAt')
+        .select('_id title slug  privateJobCategories applyLink privateJobTags keySkills position salary agency type lastDate qualification location  createdAt updatedAt')
         .exec((err, data) => {
             if (err) {
                 return res.json({
@@ -166,7 +169,7 @@ exports.listPvt =async (req, res) => {
 exports.listPvtHome =async (req, res) => {
     try {
          PrivateJob.find({}).sort({updatedAt:-1}).limit(10)
-         .select('_id title slug excerpt lastDate createdAt updatedAt')
+         .select('_id title slug  photo lastDate createdAt updatedAt')
          .exec((err, data) => {
              if (err) {
                  return res.json({
@@ -197,7 +200,7 @@ try {
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit)
-        .select('_id title slug excerpt privateJobCategories applyLink privateJobTags keySkills position salary agency type location qualification lastDate createdAt updatedAt')
+        .select('_id title slug privateJobCategories  applyLink privateJobTags keySkills position salary agency type location qualification lastDate createdAt updatedAt')
         .exec((err, data) => {
             if (err) {
                 return res.json({
@@ -235,8 +238,7 @@ try {
      PrivateJob.findOne({ slug })
         .populate('privateJobCategories', '_id name slug')
         .populate('privateJobTags', '_id name slug')
-        
-        .select('_id title body slug mtitle mdesc applyLink privateJobCategories privateJobTags position keySkills salary agency location qualification type lastDate createdAt updatedAt')
+        .select('_id title body slug officialLink applyLink  street city postal desc language subtitle photo faq privateJobCategories privateJobTags position keySkills salary agency location qualification type lastDate createdAt updatedAt')
         .exec((err, data) => {
             if (err) {
                 return res.json({
@@ -296,11 +298,10 @@ exports.updatePvtJob = async (req, res) => {
             oldJob = _.merge(oldJob, fields);
             oldJob.slug = slugBeforeMerge;
 
-            const { body, desc, privateJobCategories, privateJobTags,salary,agency,keySkills,position ,applyLink,qualification,location,lastDate,type } = fields;
+            const { body, desc,officialLink, privateJobCategories,city,street,postal,language,subtitle, privateJobTags,salary,agency,keySkills,position ,applyLink,qualification,location,lastDate,type } = fields;
 
             if (body) {
                 oldJob.excerpt = smartTrim(body, 320, ' ', ' ...');
-                oldJob.desc = stripHtml(body.substring(0, 160));
             }
 
             if (privateJobCategories) {
@@ -365,17 +366,17 @@ exports.photo = async (req, res) => {
 exports.listRelatedPvt = async (req, res) => {
     try {
     let limit = req.body.limit ? parseInt(req.body.limit) : 5;
-    const { _id, privateJobCategories } = req.body.privateJob;
+    const { _id, privateJobCategories } = req.body;
 
     PrivateJob.find({ _id: { $ne: _id }, privateJobCategories: { $in: privateJobCategories } }).sort({updatedAt:-1})
         .limit(limit)
         
-        .select('title slug excerpt agency applyLink createdAt updatedAt')
+        .select('_id title slug excerpt agency applyLink createdAt updatedAt')
         .exec((err, privateJobs) => {
             if (err) {
                 return res.status(400).json({
                     error: 'Jobs not found'
-                });
+                })
                
             }
             res.json(privateJobs);
@@ -387,28 +388,24 @@ exports.listRelatedPvt = async (req, res) => {
   
 };
 
-exports.listSearchPvt =async (req, res) => {
+
+exports.createFaq=async (req,res)=>{
+    const slug=req.params.slug.toLowerCase()
+    const {ques,ans}=req.body
+    const newFaq={ques,ans}
     try {
-         const { search } = req.query;
-    if (search) {
-      await PrivateJob.find(
-            {
-                $or: [{ title: { $regex: search, $options: 'i' } }, { body: { $regex: search, $options: 'i' } },{ location: { $regex: search, $options: 'i' } }]
-            },
-            (err, privateJobs) => {
-                if (err) {
-                    return res.status(400).json({
-                        error: errorHandler(err)
-                    });
-                }
-                res.json(privateJobs);
-            }
-        ).select('-photo -body').sort({updatedAt:-1});
-    }
+
+       const job= await PrivateJob.findOne({slug})
+        job.faq.unshift(newFaq);
+        await job.save();
+        res.json(job)
+        console.log(newFaq)
+
     } catch (err) {
-       console.error(err.message);
-       res.status(500).send('Server error'); 
+        console.error(err.message);
+        res.status(500).send('server error')
+        
     }
-   
-};
+}
+
 

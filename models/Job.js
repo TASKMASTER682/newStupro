@@ -10,10 +10,19 @@ const jobSchema = new mongoose.Schema(
             max: 160,
             required: true
         },
+        forSlug:{
+            type:String,
+            
+        },
         slug: {
             type: String,
             unique: true,
             index: true
+        },
+        
+        status:{
+            type:String,
+            default:'job'
         },
         body: {
             type: {},
@@ -21,24 +30,32 @@ const jobSchema = new mongoose.Schema(
             min: 100,
             max: 2000000
         },
-        excerpt: {
-            type: String,
-            max: 1000
-        },
-        mtitle: {
+        subtitle: {
             type: String
         },
-        mdesc: {
-            type:{}
+        desc:{
+            type:String
         },
+        officialLink:{
+            type:String
+        },
+
         lastDate:{
          type:Date,
          required:true
         },
-       
         location:{
             type:[String],
             required:true
+        },
+        street:{
+            type:String,
+        },
+        city:{
+            type:String,
+        },
+        postal:{
+            type:String,
         },
         salary:{
             type:[String],
@@ -60,7 +77,35 @@ const jobSchema = new mongoose.Schema(
           type:String,
           required:true
       },
-        photo: {
+      language:{
+          type:String,
+          default:'en'
+      },
+      faq:[
+          {
+              ques:{
+                  type:String
+              },
+              ans:{
+                  type:String
+              }
+          }
+      ],
+
+      
+    downloadLink:[{
+          linkName:{
+              type:String,
+
+          },
+          link:{
+              type:String
+          }
+        
+        }],
+    
+      
+        photo:{
             data: Buffer,
             contentType: String
         },
@@ -68,6 +113,7 @@ const jobSchema = new mongoose.Schema(
         jobTags: [{ type: ObjectId, ref: 'JobTag', required: true }],
       
     },
+    
     { timestamps: true }
 );
 

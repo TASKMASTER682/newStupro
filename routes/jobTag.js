@@ -11,7 +11,7 @@ const {requireSignin,adminMiddleware}=require('../controllers/auth');
 
 router.post('/jobTag',createTagValidator,runValidation,requireSignin,adminMiddleware,create);
 router.get('/jobTags',routeCache(300), list);
-router.get('/jobTag/:slug',routeCache(300), read);
+router.get('/jobTags/:slug',routeCache(300), read);
 router.delete('/jobTag/:slug', requireSignin, adminMiddleware, remove);
 
 module.exports=router;

@@ -57,8 +57,8 @@ exports.read=async(req,res)=>{
             Job.find({ jobCategories: jobCategory }).sort({updatedAt:-1})
                 .populate('jobCategories', '_id name slug')
                 .populate('jobTags', '_id name slug')
-                
-                .select('_id title slug excerpt salary applyLink qualification agency location lastDate type jobCategories jobTags createdAt updatedAt')
+                .limit(30)
+                .select('_id title slug salary applyLink agency location lastDate type jobCategories jobTags createdAt updatedAt')
                 .exec((err, data) => {
                     if (err) {
                         return res.status(400).json({

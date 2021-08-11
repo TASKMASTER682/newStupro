@@ -11,7 +11,7 @@ const {requireSignin,adminMiddleware}=require('../controllers/auth');
 
 router.post('/privateJobTag',createTagValidator,runValidation,requireSignin,adminMiddleware,createPvt);
 router.get('/privateJobTags',routeCache(300), listPvt);
-router.get('/privateJobTag/:slug',routeCache(300), readPvt);
+router.get('/privateJobTags/:slug',routeCache(300), readPvt);
 router.delete('/privateJobTag/:slug', requireSignin, adminMiddleware, removePvt);
 
 module.exports=router;

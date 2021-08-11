@@ -38,8 +38,6 @@ const userSchema=new mongoose.Schema({
     },
     profile:{
         type:String,
-        
-
     },
     hashed_password:{
         type:String,
@@ -50,6 +48,9 @@ const userSchema=new mongoose.Schema({
     about:{
         type:String,
 
+    },
+    status:{
+        type:String
     },
     role:{
      type:Number,
@@ -63,6 +64,69 @@ const userSchema=new mongoose.Schema({
      data:String,
      default:''
     },
+    skills:{
+        type:[String],
+    },
+    education:[
+        {
+            school:{
+                type:String,
+            },
+            degree:{
+                type:String,
+            },
+            fieldofstudy:{
+                type:String,
+            },
+            from:{
+                type:Date,
+            },
+            to:{
+                type:Date,
+                
+            },
+            current:{
+                type:Boolean,
+            },
+            description:{
+                type:String
+            }
+
+        }
+    ],
+    experience:[
+        {
+            title:{
+                type:String,
+                required:true
+            },
+            company:{
+                type:String,
+                required:true
+            },
+            location:{
+                type:String
+            },
+            from:{
+                type:Date,
+                required:true
+            },
+            to:{
+                type:Date
+            },
+            current:{
+                type:Boolean,
+                default:false
+            },
+            description:{
+                type:String
+            }
+
+        }
+    ],
+    hobbies:{
+        type:[String],
+    },
 
     facebook:{
         type:String,
@@ -74,6 +138,9 @@ const userSchema=new mongoose.Schema({
         type:String
     },
     twitter:{
+        type:String
+    },
+    website:{
         type:String
     },
 

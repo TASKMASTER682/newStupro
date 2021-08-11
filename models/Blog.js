@@ -21,17 +21,36 @@ const blogSchema = new mongoose.Schema(
             min: 200,
             max: 2000000
         },
+        sutitle:{
+            type:String
+        },
+        forSlug:{
+            type:String
+        },
+        desc:{
+            type:String
+        },
+
         excerpt: {
             type: String,
             max: 1000
         },
-        mtitle: {
-            type: String
+
+        language:{
+            type:String,
+            default:'en'
         },
-        mdesc: {
-            type:{}
-        },
-      
+        faq:[
+            {
+                ques:{
+                    type:String
+                },
+                ans:{
+                    type:String
+                }
+            }
+        ],
+
         photo: {
             data: Buffer,
             contentType: String

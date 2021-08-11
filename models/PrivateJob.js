@@ -10,6 +10,18 @@ const privateJobSchema = new mongoose.Schema(
             max: 160,
             required: true
         },
+        forSlug:{
+            type:String
+        },
+        subtitle:{
+            type:String
+        },
+        desc:{
+            type:String
+        },
+        officialLink:{
+            type:String
+        },
         slug: {
             type: String,
             unique: true,
@@ -21,17 +33,21 @@ const privateJobSchema = new mongoose.Schema(
             min: 100,
             max: 2000000
         },
-        excerpt: {
-            type: String,
-            max: 1000
+        language:{
+            type:String,
+            default:'en'
         },
-        mtitle: {
-            type: String
-        },
-      
-        mdesc: {
-            type:{}
-        },
+        faq:[
+            {
+                ques:{
+                    type:String
+                },
+                ans:{
+                    type:String
+                }
+            }
+        ],
+
         lastDate:{
          type:Date,
          required:true
@@ -39,6 +55,15 @@ const privateJobSchema = new mongoose.Schema(
         location:{
             type:[String],
             required:true
+        },
+        street:{
+            type:String,
+        },
+        city:{
+            type:String,
+        },
+        postal:{
+            type:String,
         },
         salary:{
             type:[String],

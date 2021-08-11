@@ -21,7 +21,7 @@ exports.create = async (req, res) => {
             });
         }
 
-        const { title, body, categories, tags } = fields;
+        const { title,forSlug,desc,language, subtitle,body, categories, tags } = fields;
 
         if (!title || !title.length) {
             return res.status(400).json({
@@ -41,21 +41,33 @@ exports.create = async (req, res) => {
             });
         }
 
+        if (!forSlug || forSlug.length === 0) {
+            return res.status(400).json({
+                error: 'Slug is required required'
+            });
+        }
+                if (!desc || desc.length === 0) {
+            return res.status(400).json({
+                error: 'Description required'
+            });
+        }
         if (!tags || tags.length === 0) {
             return res.status(400).json({
                 error: 'At least one tag is required'
             });
         }
 
+
         let blog = new Blog();
         blog.title = title;
+        blog.subtitle=subtitle;
         blog.body = body;
+        blog.language=language;
+        blog.forSlug=forSlug;
         blog.excerpt = smartTrim(body, 320, ' ', ' ...');
-        blog.slug = slugify(title).toLowerCase();
-        blog.mtitle = `${title} | ${process.env.APP_NAME}`;
-        blog.mdesc = stripHtml(body.substring(0, 160));
+        blog.slug = slugify(forSlug).toLowerCase();
+        blog.desc = desc;
         blog.postedBy = req.user._id;
-        
         let arrayOfCategories = categories && categories.split(',');
         let arrayOfTags = tags && tags.split(',');
 
@@ -143,7 +155,7 @@ exports.listAllBlogsCategoriesTags = async (req, res) => {
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit)
-        .select('_id title slug excerpt categories tags postedBy createdAt updatedAt')
+        .select('_id title slug excerpt categories mdesc tags postedBy createdAt updatedAt')
         .exec((err, data) => {
             if (err) {
                 return res.json({
@@ -177,6 +189,7 @@ exports.listAllBlogsCategoriesTags = async (req, res) => {
    
 };
 
+
 exports.read =async (req, res) => {
     try {
         const slug = req.params.slug.toLowerCase();
@@ -184,7 +197,7 @@ exports.read =async (req, res) => {
         .populate('categories', '_id name slug')
         .populate('tags', '_id name slug')
         .populate('postedBy', '_id name username facebook insta twitter linkedin')
-        .select('_id title body slug mtitle mdesc categories tags postedBy createdAt updatedAt').lean()
+        .select('_id title body desc language slug faq subtitle categories tags postedBy createdAt updatedAt').lean()
         .exec((err, data) => {
             if (err) {
                 return res.json({
@@ -246,11 +259,10 @@ exports.update =async (req, res) => {
             oldBlog = _.merge(oldBlog, fields);
             oldBlog.slug = slugBeforeMerge;
 
-            const { body,title, desc, categories, tags } = fields;
+            const { body,title,subtitle, desc,language, categories, tags } = fields;
 
             if (body) {
                 oldBlog.excerpt = smartTrim(body, 320, ' ', ' ...');
-                oldBlog.desc = stripHtml(body.substring(0, 160)).result;
             }
 
             if (categories) {
@@ -311,29 +323,28 @@ exports.photo = async (req, res) => {
     }
    
 };
-exports.listRelated =async (req, res) => {
+exports.listRelated = async (req, res) => {
     try {
-    let limit = req.body.limit ? parseInt(req.body.limit) : 3;
-    const { _id, categories } = req.body.blog;
+        const { _id, categories } = req.body;
 
-    Blog.find({ _id: { $ne: _id }, categories: { $in: categories } }).sort({updatedAt:-1})
-        .limit(limit)
-        .populate('postedBy', '_id name username profile photo')
-        .select('title slug excerpt postedBy createdAt updatedAt')
-        .exec((err, blogs) => {
-            if (err) {
-                return res.status(400).json({
-                    error: 'Blogs not found'
-                });
-               
-            }
-            res.json(blogs);
-        });
+        Blog.find({ _id: { $ne: _id }, categories: { $in: categories } }).sort({ updatedAt: -1 })
+            .limit(5)
+
+            .select('_id title slug excerpt photo createdAt updatedAt')
+            .exec((err, blogs) => {
+                if (err) {
+                    return res.status(400).json({
+                        error: 'Blogs not found'
+                    })
+
+                }
+                res.json(blogs);
+            });
     } catch (err) {
-         console.error(err.message);
-         res.status(500).send('Server error');
+        console.error(err.message);
+        res.status(500).send('Server error');
     }
-   
+
 };
 
 exports.listSearch = async (req, res) => {
@@ -344,13 +355,13 @@ exports.listSearch = async (req, res) => {
             {
                 $or: [{ title: { $regex: search, $options: 'i' } }, { body: { $regex: search, $options: 'i' } }]
             },
-            (err, blogs) => {
+            (err, posts) => {
                 if (err) {
                     return res.status(400).json({
                         error: errorHandler(err)
                     });
                 }
-                res.json(blogs);
+                res.json(posts);
             }
         ).select('-photo -body');
     }
@@ -374,7 +385,7 @@ exports.listByUser = async (req, res) => {
             .populate('categories', '_id name slug')
             .populate('tags', '_id name slug')
             .populate('postedBy', '_id name username')
-            .select('_id title slug postedBy createdAt updatedAt')
+            .select('_id title slug desc postedBy createdAt updatedAt')
             .exec((err, data) => {
                 if (err) {
                     return res.status(400).json({
@@ -391,3 +402,39 @@ exports.listByUser = async (req, res) => {
 
 };
 
+exports.createFaq=async (req,res)=>{
+    const slug=req.params.slug.toLowerCase()
+    const {ques,ans}=req.body
+    const newFaq={ques,ans}
+    try {
+
+       const blog= await Blog.findOne({slug})
+        blog.faq.unshift(newFaq);
+        await blog.save();
+        res.json(blog)
+        console.log(newFaq)
+
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('server error')
+        
+    }
+}
+
+exports.removeFaq=async (req,res)=>{
+    const slug=req.params.slug.toLowerCase()
+    try {
+        const blog=await Blog.findOne({slug});
+        //get remove index
+        const removeIndex=blog.faq.map(item=>item.id).indexOf
+        (req.params.exp_id);
+        blog.faq.splice(removeIndex,1);
+        await blog.save();
+        res.json(blog);
+        
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Server Error")
+        
+    }
+};

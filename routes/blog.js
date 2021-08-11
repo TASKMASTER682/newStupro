@@ -1,25 +1,27 @@
 const express = require('express');
 const router = express.Router();
 const routeCache=require('../middleware/routeCache')
-const { create, list, listAllBlogsCategoriesTags, read, remove, update,photo,  listRelated,listSearch, listByUser} = require('../controllers/blog');
+const { create, list, listAllBlogsCategoriesTags, read, remove, update,photo,  listRelated,listSearch, listByUser,createFaq,removeFaq} = require('../controllers/blog');
 
 const { requireSignin, adminMiddleware,authMiddleware,  canUpdateDeleteBlog } = require('../controllers/auth');
 
 router.post('/blog', requireSignin, adminMiddleware, create);
 router.get('/blogs', routeCache(300),list);
 router.post('/blogs-categories-tags', listAllBlogsCategoriesTags);
-router.get('/blog/:slug', read);
-router.delete('/blog/:slug', requireSignin, adminMiddleware, remove);
-router.put('/blog/:slug', requireSignin, adminMiddleware, update);
-router.get('/blog/photo/:slug',routeCache(300), photo);
+router.get('/blogs/:slug', read);
+router.delete('/blogs/:slug', requireSignin, adminMiddleware, remove);
+router.put('/blogs/:slug', requireSignin, adminMiddleware, update);
+router.get('/blogs/photo/:slug', photo);
 router.post('/blogs/related', listRelated);
-router.get('/blogs/search',routeCache(300), listSearch);
+router.get('/blogs/search', listSearch);
+router.put('/blogs/faq/:slug',requireSignin,adminMiddleware,createFaq);
+router.delete('/blogs/faq/:slug',requireSignin,adminMiddleware,removeFaq);
 
 // auth user blog crud
-router.post('/user/blog',requireSignin, authMiddleware, create);
-router.get('/:username/blogs',routeCache(300), listByUser);
-router.delete('/user/blog/:slug', requireSignin, authMiddleware, canUpdateDeleteBlog, remove);
-router.put('/user/blog/:slug', requireSignin, authMiddleware, canUpdateDeleteBlog, update);
+router.post('/user/blogs',requireSignin, authMiddleware, create);
+router.get('blogs/:username',routeCache(300), listByUser);
+router.delete('/user/blogs/:slug', requireSignin, authMiddleware, canUpdateDeleteBlog, remove);
+router.put('/user/blogs/:slug', requireSignin, authMiddleware, canUpdateDeleteBlog, update);
 
 
 

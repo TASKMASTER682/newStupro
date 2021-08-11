@@ -36,7 +36,7 @@ exports.publicProfile =async (req, res) => {
             .populate('tags', '_id name slug')
             .populate('postedBy', '_id name facebook linkedin insta twitter about')
             .limit(10)
-            .select('_id title slug excerpt categories tags postedBy createdAt updatedAt ')
+            .select('_id title slug excerpt  postedBy createdAt updatedAt ')
             .exec((err, data) => {
                 if (err) {
                     return res.status(400).json({
@@ -85,6 +85,10 @@ exports.update = (req, res) => {
                 user.photo.data = fs.readFileSync(files.photo.path);
                 user.photo.contentType = files.photo.type;
             }
+            if(fields.skills){
+                fields.skills.split(',')
+                .map(skills=>skills.trim());
+            }
     
             user.save((err, result) => {
                 if (err) {
@@ -119,4 +123,76 @@ exports.photo =async (req, res) => {
     console.error(err.message);
     res.status(500).send('Server error')
  }
+};
+
+
+
+exports.addExp=async (req,res)=>{
+    const id=req.user.id
+    const {title,location,company,from,to,current,description}=req.body
+    const newExp={title,location,company,from,to,current,description}
+    try {
+
+       const user= await User.findOne({id})
+        user.experience.unshift(newExp);
+        await user.save();
+        res.json(user)
+
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('server error')
+        
+    }
+}
+
+exports.addEdu=async (req,res)=>{
+    const id=req.user.id
+    const {school,degree,fieldOfStudy,from,to,current,description}=req.body
+    const newEdu={school,degree,fieldOfStudy,from,to,current,description}
+    try {
+
+       const user= await User.findOne({id})
+        user.education.unshift(newEdu);
+        await user.save();
+        res.json(user)
+
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('server error')
+        
+    }
+}
+
+exports.removeExp=async (req,res)=>{
+    try {
+        const profile=await User.findOne({user:req.user.id});
+        //get remove index
+        const removeIndex=profile.experience.map(item=>item.id).indexOf
+        (req.params.exp_id);
+        profile.experience.splice(removeIndex,1);
+        await profile.save();
+        res.json(profile);
+        
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Server Error")
+        
+    }
+};
+
+exports.removeEdu=async (req,res)=>{
+    try {
+        const profile=await User.findOne({user:req.user.id});
+        //get remove index
+        const removeIndex=profile.education.map(item=>item.id).indexOf
+        (req.params.edu_id);
+        profile.education.splice(removeIndex,1);
+        await profile.save();
+        res.json(profile);
+        
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Server Error")
+        
+    }
 };

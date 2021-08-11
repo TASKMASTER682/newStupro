@@ -11,7 +11,7 @@ const {requireSignin,adminMiddleware}=require('../controllers/auth');
 
 router.post('/tag',createTagValidator,runValidation,requireSignin,adminMiddleware,create);
 router.get('/tags',routeCache(300), list);
-router.get('/tag/:slug',routeCache(300), read);
+router.get('/tags/:slug',routeCache(300), read);
 router.delete('/tag/:slug', requireSignin, adminMiddleware, remove);
 
 module.exports=router;

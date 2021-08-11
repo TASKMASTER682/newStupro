@@ -39,8 +39,9 @@ exports.read=async (req,res)=>{
             Blog.find({ tags: tag })
                 .populate('categories', '_id name slug')
                 .populate('tags', '_id name slug')
-                .populate('postedBy', '_id name photo')
+                .populate('postedBy', '_id name photo username')
                 .select('_id title slug excerpt categories postedBy tags createdAt updatedAt')
+                .limit(30)
                 .exec((err, data) => {
                     if (err) {
                         return res.status(400).json({

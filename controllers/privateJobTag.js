@@ -39,8 +39,8 @@ exports.readPvt=async (req,res)=>{
             PrivateJob.find({ privateJobTags: privateJobTag }).sort({updatedAt:-1})
                 .populate('privateJobCategories', '_id name slug')
                 .populate('privateJobTags', '_id name slug')
-                
-                .select('_id title slug excerpt applyLink salary position keySkills lastDate location agency type qualification jobCategories  jobTags createdAt updatedAt')
+                .limit(30)
+                .select('_id title slug applyLink salary lastDate location agency type  jobCategories  jobTags createdAt updatedAt')
                 .exec((err, data) => {
                     if (err) {
                         return res.status(400).json({
