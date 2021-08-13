@@ -281,7 +281,7 @@ exports.read = async (req, res) => {
         Job.findOne({ slug })
             .populate('jobCategories', '_id name slug')
             .populate('jobTags', '_id name slug')
-            .select('_id title body slug subtitle officiallink street city postal subtitle downloadLink desc faq applyLink photo jobCategories jobTags salary agency location qualification type lastDate createdAt updatedAt')
+            .select('_id title body slug subtitle officialLink street city postal subtitle downloadLink desc faq applyLink photo jobCategories jobTags salary agency location qualification type lastDate createdAt updatedAt')
             .exec((err, data) => {
                 if (err) {
                     return res.json({
