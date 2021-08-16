@@ -240,7 +240,7 @@ exports.listAllJobsCategoriesTags =async (req, res) => {
             .populate('jobCategories', '_id name slug')
             .populate('jobTags', '_id name slug')
             
-            .sort({ createdAt: -1 })
+            .sort({ updateddAt: -1 })
             .skip(skip)
             .limit(limit)
             .select('_id title slug  jobCategories applyLink jobTags salary agency type location qualification lastDate createdAt updatedAt')

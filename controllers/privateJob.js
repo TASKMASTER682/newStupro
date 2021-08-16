@@ -198,7 +198,7 @@ try {
         .populate('privateJobCategories', '_id name slug')
         .populate('privateJobTags', '_id name slug')
         
-        .sort({ createdAt: -1 })
+        .sort({ updatedAt: -1 })
         .skip(skip)
         .limit(limit)
         .select('_id title slug privateJobCategories  applyLink privateJobTags keySkills position salary agency type location qualification lastDate createdAt updatedAt')
