@@ -75,7 +75,7 @@ exports.create = async (req, res) => {
                     error: 'Last Date is required'
                 });
             }
-            if (!forSlug || !forSLug.length) {
+            if (!forSlug || !forSlug.length) {
                 return res.status(400).json({
                     error: 'Slug is required'
                 });

@@ -6,12 +6,12 @@ const { create, list, listAllBlogsCategoriesTags, read, remove, update,photo,  l
 const { requireSignin, adminMiddleware,authMiddleware,  canUpdateDeleteBlog } = require('../controllers/auth');
 
 router.post('/blog', requireSignin, adminMiddleware, create);
-router.get('/blogs', routeCache(300),list);
+router.get('/blogs',list);
 router.post('/blogs-categories-tags', listAllBlogsCategoriesTags);
 router.get('/blogs/:slug', read);
 router.delete('/blogs/:slug', requireSignin, adminMiddleware, remove);
 router.put('/blogs/:slug', requireSignin, adminMiddleware, update);
-router.get('/blogs/photo/:slug', photo);
+router.get('/blogs/photo/:slug',routeCache(300), photo);
 router.post('/blogs/related', listRelated);
 router.get('/blogs/search', listSearch);
 router.put('/blogs/faq/:slug',requireSignin,adminMiddleware,createFaq);

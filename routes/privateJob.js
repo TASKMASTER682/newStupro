@@ -6,7 +6,7 @@ const { createPvt, listPvt, listAllPvtJobsCategoriesTags, readPvt, removePvtJob,
 const { requireSignin, adminMiddleware} = require('../controllers/auth');
 
 router.post('/privateJob', requireSignin, adminMiddleware, createPvt);
-router.get('/privateJobs',routeCache(300), listPvt);
+router.get('/privateJobs', listPvt);
 router.get('/privateJobsHome',routeCache(300), listPvtHome);
 router.post('/privateJobs-categories-tags', listAllPvtJobsCategoriesTags);
 router.get('/privateJobs/:slug',routeCache(300), readPvt);

@@ -6,7 +6,7 @@ const { create, list, listAllJobsCategoriesTags, read, removeJob, updateJob,phot
 const { requireSignin, adminMiddleware} = require('../controllers/auth');
 
 router.post('/job', requireSignin, adminMiddleware, create);
-router.get('/jobs', routeCache(300), list);
+router.get('/jobs',  list);
 router.get('/jobsHome',routeCache(300), listHome);
 router.get('/jobsAdmit',routeCache(300), listAdmit);
 router.get('/jobsResult',routeCache(300), listResult);

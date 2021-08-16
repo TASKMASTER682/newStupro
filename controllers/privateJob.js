@@ -78,6 +78,7 @@ try {
 
         let privateJob = new PrivateJob();
         privateJob.title = title;
+        privateJob.forSlug = forSlug;
         privateJob.body = body;
         privateJob.desc=desc;
         privateJob.postal=postal;
@@ -300,9 +301,7 @@ exports.updatePvtJob = async (req, res) => {
 
             const { body, desc,officialLink, privateJobCategories,city,street,postal,language,subtitle, privateJobTags,salary,agency,keySkills,position ,applyLink,qualification,location,lastDate,type } = fields;
 
-            if (body) {
-                oldJob.excerpt = smartTrim(body, 320, ' ', ' ...');
-            }
+   
 
             if (privateJobCategories) {
                 oldJob.privateJobCategories = privateJobCategories.split(',');
@@ -371,7 +370,7 @@ exports.listRelatedPvt = async (req, res) => {
     PrivateJob.find({ _id: { $ne: _id }, privateJobCategories: { $in: privateJobCategories } }).sort({updatedAt:-1})
         .limit(limit)
         
-        .select('_id title slug excerpt agency applyLink createdAt updatedAt')
+        .select('_id title slug  agency applyLink createdAt updatedAt')
         .exec((err, privateJobs) => {
             if (err) {
                 return res.status(400).json({
