@@ -27,7 +27,6 @@ if (process.env.NODE_ENV === 'development') {
     app.use(cors({ origin: `${process.env.CLIENT_URL}` }));
 } 
 connectDB();
-// app.use(bodyParser.json({limit: '100mb'}));
 app.use(express.json({limit: '100mb',extended:true}));
 app.use(morgan('dev'));
 app.use(cookieParser());
