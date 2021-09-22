@@ -197,7 +197,7 @@ exports.read =async (req, res) => {
         .populate('categories', '_id name slug')
         .populate('tags', '_id name slug')
         .populate('postedBy', '_id name username facebook insta twitter linkedin')
-        .select('_id title body desc language slug faq subtitle categories tags postedBy createdAt updatedAt').lean()
+        .select('_id title body desc excerpt language slug faq subtitle categories tags postedBy createdAt updatedAt').lean()
         .exec((err, data) => {
             if (err) {
                 return res.json({

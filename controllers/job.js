@@ -174,7 +174,7 @@ exports.list = async (req, res) => {
 
 exports.listHome = async (req, res) => {
     try {
-        Job.find({}).sort({ updatedAt: -1 }).limit(10)
+        Job.find({status:'jobs'}).sort({ updatedAt: -1 }).limit(10)
             .select('_id title slug photo lastDate createdAt updatedAt')
             .exec((err, data) => {
                 if (err) {
@@ -236,7 +236,7 @@ exports.listAllJobsCategoriesTags =async (req, res) => {
         let jobCategories;
         let jobTags;
     
-          Job.find({}).sort({updatedAt:-1})
+          Job.find({status:'jobs'}).sort({updatedAt:-1})
             .populate('jobCategories', '_id name slug')
             .populate('jobTags', '_id name slug')
             
@@ -281,7 +281,7 @@ exports.read = async (req, res) => {
         Job.findOne({ slug })
             .populate('jobCategories', '_id name slug')
             .populate('jobTags', '_id name slug')
-            .select('_id title body slug subtitle officialLink street city postal subtitle downloadLink desc faq applyLink photo jobCategories jobTags salary agency location qualification type lastDate createdAt updatedAt')
+            .select('_id title body slug status subtitle officialLink street city postal subtitle downloadLink desc faq applyLink photo jobCategories jobTags salary agency location qualification type lastDate createdAt updatedAt')
             .exec((err, data) => {
                 if (err) {
                     return res.json({

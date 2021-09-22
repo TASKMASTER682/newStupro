@@ -218,7 +218,7 @@ exports.forgotPassword = async (req, res) => {
             <p>${process.env.CLIENT_URL}/auth/password/reset/${token}</p>
             <hr/>
             <p>This email may contain sensetive information</p>
-            <p>https://theprograd.com</p>
+            <p>https://www.theprograd.com</p>
         `
         };
       
